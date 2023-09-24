@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.btn{
+  @apply p-4 border rounded bg-cyan-50 text-black hover:cursor-pointer;
+}
+
+.translate-center{
+  @apply -translate-x-1/2 -translate-y-1/2;
+}
