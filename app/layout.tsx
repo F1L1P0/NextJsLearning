@@ -18,8 +18,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} text-center`}>
-        <Link href="/api/data" className="absolute top-0 right-2">
+        <Link
+          href="/api/data"
+          className="absolute top-0 right-2 bg-slate-600 p-2 rounded-lg">
           API
+        </Link>
+        <Link
+          href="/uploads"
+          className="absolute top-0 right-20 bg-slate-600 p-2 rounded-lg">
+          Uploads
         </Link>
         {children}
       </body>

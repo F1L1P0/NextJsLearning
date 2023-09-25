@@ -3,6 +3,10 @@ import getUserPosts from '@/app/lib/getUserPosts'
 import { Suspense } from 'react'
 import UserPosts from './components/UserPosts'
 import type { Metadata } from 'next'
+import getUsers from '@/app/lib/getUsers'
+
+import { notFound } from 'next/navigation'
+import NotFound from './not-found'
 
 type Params = {
   params: {
@@ -16,8 +20,14 @@ export async function generateMetadata({
   const userData: Promise<User> = getUser(userId)
   const user: User = await userData
 
+  if (!user || !user.name) {
+    return {
+      title: 'User Not Found',
+    }
+  }
+
   return {
-    title: user.firstName,
+    title: user.name,
     description: `This is the page of ${user.name}`,
   }
 }
@@ -26,10 +36,11 @@ export default async function UserPage({ params: { userId } }: Params) {
   const userData: Promise<User> = getUser(userId)
   const userPostsData: Promise<Post[]> = getUserPosts(userId)
 
-  // If not progressively rendering with Suspense, use Promise.all
   //const [user, userPosts] = await Promise.all([userData, userPostsData])
 
   const user = await userData
+
+  if (!user || user.name) return <NotFound />
 
   return (
     <>
@@ -41,4 +52,13 @@ export default async function UserPage({ params: { userId } }: Params) {
       </Suspense>
     </>
   )
+}
+
+export async function generateStaticParams() {
+  const usersData: Promise<User[]> = getUsers()
+  const users = await usersData
+
+  return users.map((user) => ({
+    userId: user.id.toString(),
+  }))
 }
